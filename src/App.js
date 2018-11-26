@@ -17,7 +17,14 @@ import aws_exports from './aws-exports';
 import { withAuthenticator } from 'aws-amplify-react';
 
 Amplify.configure(aws_exports);
-
+Auth.signIn("Admin", "Admin@123456")
+    .then(user => {
+      const session = Amplify.Auth.currentSession()
+  .then(s => {
+    console.log(s.getAccessToken().getJwtToken());
+  }).catch(e=>console.log(e));
+    })
+    .catch(err => console.log(err));
 const App = () => (
   <Router>
     <div>
