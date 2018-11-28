@@ -17,7 +17,8 @@ import './page.css';
 // import questions from '../../questions';
 
 import {
-  updateQuestionList
+  updateQuestionList,
+  changeCode
 } from '../../actions/questionDispatch';
 
 import Amplify, {
@@ -25,21 +26,25 @@ import Amplify, {
   graphqlOperation
 } from 'aws-amplify';
 
-import awsExportConfig from '../../aws-exports.js'; 
+import awsExportConfig from '../../aws-exports.js';
 
 import * as mutations from '../../graphql/mutations.js';
+import * as subscriptions from '../../graphql/subscriptions.js';
 
-console.log(">>> createQuestionSnapshot", mutations.createQuestionSnapshot)
+// console.log(">>> createQuestionSnapshot", mutations.createQuestionSnapshot)
 
 Amplify.configure(awsExportConfig);
 
 class MainPage extends Component {
+  state = {
+    recordId: ''
+  }
   constructor(props) {
     super(props);
-    
+
     // this.listQuestions =f listQuestions.bind(this);
     this.updateQuestionList = this.props.actions.updateQuestionList;
-    
+
     // this.testsRef = React.createRef();
     // this.wrappedConsole = createWrappedConsole(console, this.props.actions._dispatch);
     // this.state = { SyntaxError : '' } ;
@@ -54,7 +59,7 @@ class MainPage extends Component {
     // this.resetConsole = this.actions.resetConsole;
     // this.changeSyntaxError = this.actions.changeSyntaxError;
 
-    
+
     // let counter = 0;
     // function createData(type, questionSet, name, content, test, tags) {
     //   return { id: counter++, type, questionSet, name, content, test, tags };
@@ -69,7 +74,7 @@ class MainPage extends Component {
     // console.log("#this.listRows", this.listRows)
 
   }
-  
+
   async listQuestions() {
     console.log('###listing room');
     const listQuestionsOp = `query ListQuestions {
@@ -83,7 +88,7 @@ class MainPage extends Component {
       }
     }`;
     const result = await API.graphql(graphqlOperation(listQuestionsOp));
-    console.log("#listQuestions", JSON.stringify(result));
+    // console.log("#listQuestions", JSON.stringify(result));
     this.updateQuestionList(result.data.listQuestions.items);
   };
 
@@ -161,17 +166,41 @@ class MainPage extends Component {
     // this.updateRoomQuestionSource(question);
     this.createQuestionSnapshot(question);
   }
+  // receive code data from interviewee page
+  subscribeOnCreateRecord() {
+    const subscription = API.graphql(
+      graphqlOperation(subscriptions.onCreateRecord)
+    ).subscribe({
+      next: ({ value }) => {
+        console.log("onCreateRecord", value)
+        this.setState({ recordId: value.data.onCreateRecord.id })
+      }
+    })
+  }
+
+  subscribeOnUpdateRecord() {
+    const subscription = API.graphql(
+      graphqlOperation(subscriptions.onUpdateRecord)
+    ).subscribe({
+      next: ({ value }) => {
+        console.log("onUpdateRecord", value)
+        this.props.actions.changeCode({ rawCode: value.data.onUpdateRecord.history[0] });
+
+      }
+    })
+  }
 
   componentDidMount() {
     this.listQuestions();
+    this.subscribeOnCreateRecord();
+    this.subscribeOnUpdateRecord();
   }
 
   componentWillUpdate(nextProps, nextState) {
 
   }
 
-  componentWillReceiveProps(nextProps){
-
+  componentWillReceiveProps(nextProps) {
   }
 
   render() {
@@ -184,7 +213,7 @@ class MainPage extends Component {
         </div>
         <div className="questionEditor-panel-right">
           <QuestionEditor></QuestionEditor>
-        </div>        
+        </div>
       </span>
     );
   }
@@ -193,7 +222,7 @@ class MainPage extends Component {
 export default withRouter(connect(
   state => {
     console.log("### listRows", state);
-    let {questionDispatch} = state;
+    let { questionDispatch } = state;
     console.log("### questionDispatch", questionDispatch);
 
     return {
@@ -203,7 +232,8 @@ export default withRouter(connect(
   dispatch => {
     return {
       actions: {
-        updateQuestionList: (questions) => dispatch(updateQuestionList(questions))
+        updateQuestionList: (questions) => dispatch(updateQuestionList(questions)),
+        changeCode: (args) => dispatch(changeCode(args)),
       }
     };
   }

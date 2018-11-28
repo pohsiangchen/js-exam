@@ -9,7 +9,6 @@ import AceEditor from 'react-ace';
 import { withRouter } from 'react-router-dom';
 import { Button } from 'antd';
 
-import QuestionSelector from './QuestionSelector';
 
 import {
   changeCode,
@@ -24,25 +23,30 @@ import debouncedRunCode from '../../../utils/runCode';
 import Border from './Border';
 import Console from './Console';
 import createWrappedConsole from '../../../utils/consoleFactory';
+import { API, graphqlOperation } from 'aws-amplify';
+import * as mutations from '../../../graphql/mutations.js';
 
 class MainPage extends Component {
+  state = {
+    recordId: ''
+  }
   constructor(props) {
     super(props);
 
     this.testsRef = React.createRef();
     this.wrappedConsole = createWrappedConsole(console, this.props.actions._dispatch);
-    this.state = { 
-      SyntaxError: '', 
-        index: 0, 
-        question: { name: '', content: '', test: '' }  
+    this.state = {
+      SyntaxError: '',
+      index: 0,
+      question: { name: '', content: '', test: '' }
     };
 
     // this.handleSelected = this.handleSelected.bind(this);
     this.handleCodeChange = this.handleCodeChange.bind(this);
 
-    this.actions = this.props.actions ;
-    this.resetQuestion = this.actions.resetQuestion ;
-    this.changeQuestion = this.actions.changeQuestion ;
+    this.actions = this.props.actions;
+    this.resetQuestion = this.actions.resetQuestion;
+    this.changeQuestion = this.actions.changeQuestion;
     this.changeCode = this.actions.changeCode;
     this.resetConsole = this.actions.resetConsole;
     this.changeSyntaxError = this.actions.changeSyntaxError;
@@ -54,7 +58,7 @@ class MainPage extends Component {
     //   this.props.history.push('/js-exam/login');
     //   return;
     // }
-    const { rawCode } = this.props ;
+    const { rawCode } = this.props;
     this.handleCodeChange(rawCode);
   }
 
@@ -66,9 +70,11 @@ class MainPage extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps){
-    if ( this.props.index !== nextProps.index || nextProps.compiledCode === '' ){
-      this.handleCodeChange(nextProps.rawCode) ;
+  componentWillReceiveProps(nextProps) {
+    console.log("componentWillReceiveProps", nextProps)
+    if (this.props.index !== nextProps.index || nextProps.compiledCode === '') {
+      this.handleCodeChange(nextProps.rawCode);
+      this.createRecord();
     }
   }
 
@@ -93,19 +99,47 @@ class MainPage extends Component {
         },
         objectAssign: 'Object.assign',
       });
-      this.changeCode({ compiledCode : code , rawCode : newCode });
-      this.setState({ 'SyntaxError' : '' }) ; //clear syntax error
+      this.changeCode({ compiledCode: code, rawCode: newCode });
+      this.updateRecord(newCode);
+      this.setState({ 'SyntaxError': '' }); //clear syntax error
     } catch (e) {
-      this.changeCode({ rawCode : newCode });
+      this.changeCode({ rawCode: newCode });
       if (e.loc) {
         const { line, column } = e.loc;
-        this.setState({ SyntaxError : `Syntax error: line ${line}, column ${column}` }) ;
+        this.setState({ SyntaxError: `Syntax error: line ${line}, column ${column}` });
       }
     }
   }
+  // when receive new question, create a record
+  async createRecord() {
+    console.log("createRecord");
+    // divided by 1000 because we use Int to save the timeBegin
+    const timeBegin = parseInt(new Date().getTime() / 1000);
+    const params = {
+      input: {
+        timeBegin
+      }
+    }
+    const { data } = await API.graphql(graphqlOperation(mutations.createRecord, params))
+    this.setState({ recordId: data.createRecord.id })
+    console.log(data)
+  }
+  async updateRecord(newCode) {
+    if (this.state.recordId) {
+      console.log("updateRecord", this.state.recordId, newCode);
+      const params = {
+        input: {
+          id: this.state.recordId,
+          history: newCode
+        }
+      }
+      const result = await API.graphql(graphqlOperation(mutations.updateRecord, params))
+      console.log(result)
+    }
 
+  }
   render() {
-    const { rawCode , index } = this.props;
+    const { rawCode, index } = this.props;
     console.log("#render", this.state);
     return (
       <div className="App">
@@ -151,8 +185,8 @@ class MainPage extends Component {
               {!this.state.SyntaxError
                 ? null
                 : <div className="syntax-error">
-                    {this.state.SyntaxError}
-                  </div>}
+                  {this.state.SyntaxError}
+                </div>}
             </div>
             <Border
               className="control-panel"
@@ -163,7 +197,7 @@ class MainPage extends Component {
               <div id="tests" ref={this.testsRef} />
             </Border>
           </div>
-          <Console className="bottom-panel"/>
+          <Console className="bottom-panel" />
         </div>
       </div>
     );
@@ -172,15 +206,15 @@ class MainPage extends Component {
 
 export default withRouter(connect(
   state => {
-    const { code : codeObj } = state ;
+    const { code: codeObj } = state;
     console.log("#state to props: state", state);
     // console.log("#state to props: state",  codeObj);
-    const { index } = codeObj ;
-    const compiledCode = codeObj.compiledCode ;
-    const rawCode = codeObj.rawCode || codeObj.question.content ;
+    const { index } = codeObj;
+    const compiledCode = codeObj.compiledCode;
+    const rawCode = codeObj.rawCode || codeObj.question.content;
     return {
-      rawCode ,
-      compiledCode ,
+      rawCode,
+      compiledCode,
       index,
       isLogin: state.login.isLogin,
       question: codeObj.question
@@ -189,9 +223,9 @@ export default withRouter(connect(
   dispatch => {
     return {
       actions: {
-        changeCode: (args) => dispatch(changeCode(args)) ,
-        changeQuestion : data => dispatch(changeQuestion(data)) ,
-        resetQuestion : () => dispatch(resetQuestion()),
+        changeCode: (args) => dispatch(changeCode(args)),
+        changeQuestion: data => dispatch(changeQuestion(data)),
+        resetQuestion: () => dispatch(resetQuestion()),
         _dispatch: dispatch,
         resetConsole: () => dispatch(resetConsole())
       }
