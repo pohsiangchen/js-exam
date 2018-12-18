@@ -20,6 +20,7 @@ export const createRoom = `mutation CreateRoom($input: CreateRoomInput!) {
       id
       name
     }
+    password
     users {
       items {
         id
@@ -49,6 +50,7 @@ export const updateRoom = `mutation UpdateRoom($input: UpdateRoomInput!) {
       id
       name
     }
+    password
     users {
       items {
         id
@@ -78,6 +80,7 @@ export const deleteRoom = `mutation DeleteRoom($input: DeleteRoomInput!) {
       id
       name
     }
+    password
     users {
       items {
         id
@@ -97,6 +100,7 @@ export const createJeUser = `mutation CreateJeUser($input: CreateJEUserInput!) {
       subjectId
       description
       status
+      password
     }
     team {
       id
@@ -133,6 +137,7 @@ export const updateJeUser = `mutation UpdateJeUser($input: UpdateJEUserInput!) {
       subjectId
       description
       status
+      password
     }
     team {
       id
@@ -169,6 +174,7 @@ export const deleteJeUser = `mutation DeleteJeUser($input: DeleteJEUserInput!) {
       subjectId
       description
       status
+      password
     }
     team {
       id
@@ -276,6 +282,7 @@ export const createTest = `mutation CreateTest($input: CreateTestInput!) {
       subjectId
       description
       status
+      password
     }
     team {
       id
@@ -329,6 +336,7 @@ export const updateTest = `mutation UpdateTest($input: UpdateTestInput!) {
       subjectId
       description
       status
+      password
     }
     team {
       id
@@ -382,6 +390,7 @@ export const deleteTest = `mutation DeleteTest($input: DeleteTestInput!) {
       subjectId
       description
       status
+      password
     }
     team {
       id

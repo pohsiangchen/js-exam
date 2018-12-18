@@ -20,6 +20,7 @@ export const getRoom = `query GetRoom($id: ID!) {
       id
       name
     }
+    password
     users {
       items {
         id
@@ -54,6 +55,7 @@ export const listRooms = `query ListRooms(
         id
         name
       }
+      password
       users {
         items {
           id
@@ -75,6 +77,7 @@ export const getJeUser = `query GetJeUser($id: ID!) {
       subjectId
       description
       status
+      password
     }
     team {
       id
@@ -116,6 +119,7 @@ export const listJeUsers = `query ListJeUsers(
         subjectId
         description
         status
+        password
       }
       team {
         id
@@ -208,6 +212,7 @@ export const getTest = `query GetTest($id: ID!) {
       subjectId
       description
       status
+      password
     }
     team {
       id
@@ -266,6 +271,7 @@ export const listTests = `query ListTests(
         subjectId
         description
         status
+        password
       }
       team {
         id

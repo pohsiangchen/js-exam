@@ -1,20 +1,23 @@
-type Room @model {
+type Room @model { #not used anymore
   id: ID!
   test: Test @connection(name: "RoomTests")
   subjectId: String #could be email
   description: String
   status: String #open/closed
   host: JEUser 
+  password: String
   users: [JEUser] @connection(name: "RoomJEUsers") # host & observers
-  questionSource: [QuestionSnapshot] @connection(name: "RoomQuestionSnapshots") #questionContainer (for host to select question), after the test, remove it
-  questionSourceStr: [String]
-  progress: Int  
+  # questionSource: [QuestionSnapshot] @connection(name: "RoomQuestionSnapshots") #questionContainer (for host to select question), after the test, remove it
+  # questionSourceStr: [String]
+  # progress: Int  
 }
 type JEUser @model {
   id: ID!
   name: String
   room: Room @connection(name: "RoomJEUsers") # after leave the room, must clear the value
   team: Team @connection(name: "TeamJEUsers")
+  test: Test @connection(name: "TestJEUsers")
+  hostTest: Test @connection(name: "TestHost") # the test this JEUser host
 }
 type Team @model {
   id: ID!
@@ -28,11 +31,13 @@ type Test @model {
   room: Room @connection(name: "RoomTests")
   team: Team
   subjectId: String #could be email
-  users: [JEUser] @connection(name: "RoomJEUsers") # host & observers
+  users: [JEUser] @connection(name: "TestJEUsers") # host & observers
+	host: JEUser @connection(name: "TestHost") # ID for current JEUser
   description: String
   timeBegin: Int
   timeEnd: Int 
   records: [Record] @connection(name: "TestRecords")
+	currentRecord: Record @connection(name: "TestCurrentRecord") # ID for current Record
   status: String #open/inprogress/completed/closed
   tags: [String]
 }
@@ -44,17 +49,18 @@ type Record @model {
   timeBegin: Int
   timeEnd: Int
   history: [String] # todo
-  result: Result @connection(name: "RecordResult")
+  # result: Result @connection(name: "RecordResult")
   question: QuestionSnapshot @connection(name: "RecordQuestionSnapshot")
   test: Test @connection(name: "TestRecords"),
+  currentRecordTest: Test @connection(name: "TestCurrentRecord"),
 }
-type Result @model {
-  id: ID!
-  input: String #code area
-  output: String #code output
-  testCaseResults: String #how many passed, how many failed
-  record: Record @connection(name: "RecordResult")
-}
+# type Result @model {
+#   id: ID!
+#   input: String #code area
+#   output: String #code output
+#   testCaseResults: String #how many passed, how many failed
+#   record: Record @connection(name: "RecordResult")
+# }
 type QuestionSnapshot @model {
   id: ID!
   type: String # eg. javascript
@@ -62,7 +68,7 @@ type QuestionSnapshot @model {
   content: String
   test: String
   record: Record @connection(name: "RecordQuestionSnapshot")
-  room: Room @connection(name: "RoomQuestionSnapshots") #belong to a room QuestionContainer (for host to select question), after the test, remove it
+  # room: Room @connection(name: "RoomQuestionSnapshots") #belong to a room QuestionContainer (for host to select question), after the test, remove it
 }
 type QuestionSet @model { #question set for host to pick in a test
   id: ID! 

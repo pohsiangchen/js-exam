@@ -20,6 +20,7 @@ export const onCreateRoom = `subscription OnCreateRoom {
       id
       name
     }
+    password
     users {
       items {
         id
@@ -49,6 +50,7 @@ export const onUpdateRoom = `subscription OnUpdateRoom {
       id
       name
     }
+    password
     users {
       items {
         id
@@ -78,6 +80,7 @@ export const onDeleteRoom = `subscription OnDeleteRoom {
       id
       name
     }
+    password
     users {
       items {
         id
@@ -97,6 +100,7 @@ export const onCreateJeUser = `subscription OnCreateJeUser {
       subjectId
       description
       status
+      password
     }
     team {
       id
@@ -133,6 +137,7 @@ export const onUpdateJeUser = `subscription OnUpdateJeUser {
       subjectId
       description
       status
+      password
     }
     team {
       id
@@ -169,6 +174,7 @@ export const onDeleteJeUser = `subscription OnDeleteJeUser {
       subjectId
       description
       status
+      password
     }
     team {
       id
@@ -276,6 +282,7 @@ export const onCreateTest = `subscription OnCreateTest {
       subjectId
       description
       status
+      password
     }
     team {
       id
@@ -329,6 +336,7 @@ export const onUpdateTest = `subscription OnUpdateTest {
       subjectId
       description
       status
+      password
     }
     team {
       id
@@ -382,6 +390,7 @@ export const onDeleteTest = `subscription OnDeleteTest {
       subjectId
       description
       status
+      password
     }
     team {
       id
