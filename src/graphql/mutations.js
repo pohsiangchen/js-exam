@@ -27,18 +27,6 @@ export const createRoom = `mutation CreateRoom($input: CreateRoomInput!) {
       }
       nextToken
     }
-    questionSource {
-      items {
-        id
-        type
-        name
-        content
-        test
-      }
-      nextToken
-    }
-    questionSourceStr
-    progress
   }
 }
 `;
@@ -68,18 +56,6 @@ export const updateRoom = `mutation UpdateRoom($input: UpdateRoomInput!) {
       }
       nextToken
     }
-    questionSource {
-      items {
-        id
-        type
-        name
-        content
-        test
-      }
-      nextToken
-    }
-    questionSourceStr
-    progress
   }
 }
 `;
@@ -109,18 +85,6 @@ export const deleteRoom = `mutation DeleteRoom($input: DeleteRoomInput!) {
       }
       nextToken
     }
-    questionSource {
-      items {
-        id
-        type
-        name
-        content
-        test
-      }
-      nextToken
-    }
-    questionSourceStr
-    progress
   }
 }
 `;
@@ -133,13 +97,29 @@ export const createJeUser = `mutation CreateJeUser($input: CreateJEUserInput!) {
       subjectId
       description
       status
-      questionSourceStr
-      progress
     }
     team {
       id
       name
       description
+    }
+    test {
+      id
+      subjectId
+      description
+      timeBegin
+      timeEnd
+      status
+      tags
+    }
+    hostTest {
+      id
+      subjectId
+      description
+      timeBegin
+      timeEnd
+      status
+      tags
     }
   }
 }
@@ -153,13 +133,29 @@ export const updateJeUser = `mutation UpdateJeUser($input: UpdateJEUserInput!) {
       subjectId
       description
       status
-      questionSourceStr
-      progress
     }
     team {
       id
       name
       description
+    }
+    test {
+      id
+      subjectId
+      description
+      timeBegin
+      timeEnd
+      status
+      tags
+    }
+    hostTest {
+      id
+      subjectId
+      description
+      timeBegin
+      timeEnd
+      status
+      tags
     }
   }
 }
@@ -173,13 +169,29 @@ export const deleteJeUser = `mutation DeleteJeUser($input: DeleteJEUserInput!) {
       subjectId
       description
       status
-      questionSourceStr
-      progress
     }
     team {
       id
       name
       description
+    }
+    test {
+      id
+      subjectId
+      description
+      timeBegin
+      timeEnd
+      status
+      tags
+    }
+    hostTest {
+      id
+      subjectId
+      description
+      timeBegin
+      timeEnd
+      status
+      tags
     }
   }
 }
@@ -264,8 +276,6 @@ export const createTest = `mutation CreateTest($input: CreateTestInput!) {
       subjectId
       description
       status
-      questionSourceStr
-      progress
     }
     team {
       id
@@ -280,6 +290,10 @@ export const createTest = `mutation CreateTest($input: CreateTestInput!) {
       }
       nextToken
     }
+    host {
+      id
+      name
+    }
     description
     timeBegin
     timeEnd
@@ -293,6 +307,14 @@ export const createTest = `mutation CreateTest($input: CreateTestInput!) {
         history
       }
       nextToken
+    }
+    currentRecord {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      history
     }
     status
     tags
@@ -307,8 +329,6 @@ export const updateTest = `mutation UpdateTest($input: UpdateTestInput!) {
       subjectId
       description
       status
-      questionSourceStr
-      progress
     }
     team {
       id
@@ -323,6 +343,10 @@ export const updateTest = `mutation UpdateTest($input: UpdateTestInput!) {
       }
       nextToken
     }
+    host {
+      id
+      name
+    }
     description
     timeBegin
     timeEnd
@@ -336,6 +360,14 @@ export const updateTest = `mutation UpdateTest($input: UpdateTestInput!) {
         history
       }
       nextToken
+    }
+    currentRecord {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      history
     }
     status
     tags
@@ -350,8 +382,6 @@ export const deleteTest = `mutation DeleteTest($input: DeleteTestInput!) {
       subjectId
       description
       status
-      questionSourceStr
-      progress
     }
     team {
       id
@@ -366,6 +396,10 @@ export const deleteTest = `mutation DeleteTest($input: DeleteTestInput!) {
       }
       nextToken
     }
+    host {
+      id
+      name
+    }
     description
     timeBegin
     timeEnd
@@ -379,6 +413,14 @@ export const deleteTest = `mutation DeleteTest($input: DeleteTestInput!) {
         history
       }
       nextToken
+    }
+    currentRecord {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      history
     }
     status
     tags
@@ -397,12 +439,6 @@ export const createRecord = `mutation CreateRecord($input: CreateRecordInput!) {
     timeBegin
     timeEnd
     history
-    result {
-      id
-      input
-      output
-      testCaseResults
-    }
     question {
       id
       type
@@ -411,6 +447,15 @@ export const createRecord = `mutation CreateRecord($input: CreateRecordInput!) {
       test
     }
     test {
+      id
+      subjectId
+      description
+      timeBegin
+      timeEnd
+      status
+      tags
+    }
+    currentRecordTest {
       id
       subjectId
       description
@@ -434,12 +479,6 @@ export const updateRecord = `mutation UpdateRecord($input: UpdateRecordInput!) {
     timeBegin
     timeEnd
     history
-    result {
-      id
-      input
-      output
-      testCaseResults
-    }
     question {
       id
       type
@@ -448,6 +487,15 @@ export const updateRecord = `mutation UpdateRecord($input: UpdateRecordInput!) {
       test
     }
     test {
+      id
+      subjectId
+      description
+      timeBegin
+      timeEnd
+      status
+      tags
+    }
+    currentRecordTest {
       id
       subjectId
       description
@@ -471,12 +519,6 @@ export const deleteRecord = `mutation DeleteRecord($input: DeleteRecordInput!) {
     timeBegin
     timeEnd
     history
-    result {
-      id
-      input
-      output
-      testCaseResults
-    }
     question {
       id
       type
@@ -493,56 +535,14 @@ export const deleteRecord = `mutation DeleteRecord($input: DeleteRecordInput!) {
       status
       tags
     }
-  }
-}
-`;
-export const createResult = `mutation CreateResult($input: CreateResultInput!) {
-  createResult(input: $input) {
-    id
-    input
-    output
-    testCaseResults
-    record {
+    currentRecordTest {
       id
       subjectId
-      syncCode
+      description
       timeBegin
       timeEnd
-      history
-    }
-  }
-}
-`;
-export const updateResult = `mutation UpdateResult($input: UpdateResultInput!) {
-  updateResult(input: $input) {
-    id
-    input
-    output
-    testCaseResults
-    record {
-      id
-      subjectId
-      syncCode
-      timeBegin
-      timeEnd
-      history
-    }
-  }
-}
-`;
-export const deleteResult = `mutation DeleteResult($input: DeleteResultInput!) {
-  deleteResult(input: $input) {
-    id
-    input
-    output
-    testCaseResults
-    record {
-      id
-      subjectId
-      syncCode
-      timeBegin
-      timeEnd
-      history
+      status
+      tags
     }
   }
 }
@@ -562,14 +562,6 @@ export const createQuestionSnapshot = `mutation CreateQuestionSnapshot($input: C
       timeEnd
       history
     }
-    room {
-      id
-      subjectId
-      description
-      status
-      questionSourceStr
-      progress
-    }
   }
 }
 `;
@@ -588,14 +580,6 @@ export const updateQuestionSnapshot = `mutation UpdateQuestionSnapshot($input: U
       timeEnd
       history
     }
-    room {
-      id
-      subjectId
-      description
-      status
-      questionSourceStr
-      progress
-    }
   }
 }
 `;
@@ -613,14 +597,6 @@ export const deleteQuestionSnapshot = `mutation DeleteQuestionSnapshot($input: D
       timeBegin
       timeEnd
       history
-    }
-    room {
-      id
-      subjectId
-      description
-      status
-      questionSourceStr
-      progress
     }
   }
 }
