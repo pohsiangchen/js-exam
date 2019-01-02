@@ -6,8 +6,8 @@ import { message, Spin } from 'antd';
 
 import createWrappedConsole from 'utils/consoleFactory';
 import { subscribeOnCreateRecord } from 'utils/record';
-import { getRoomInfo, updateRoomInfo } from 'actions/room';
-import { setCurrentRecord, updateRecordData } from 'actions/record';
+import { getRoomInfo, updateRoomInfo } from 'models/room/actions';
+import { setCurrentRecord, updateRecordData } from 'models/record/actions';
 
 import ControlWidget from './ControlWidget';
 import ReactPage from './ReactPage';

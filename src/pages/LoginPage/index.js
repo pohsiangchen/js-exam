@@ -3,7 +3,7 @@ import { Input, Button } from 'antd';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { submitPassword } from 'actions/login';
+import { submitPassword } from 'models/login/actions';
 import styles from './LoginPage.module.scss';
 
 class LoginPage extends React.Component {

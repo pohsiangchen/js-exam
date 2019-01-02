@@ -1,5 +1,5 @@
 import { getRoom, deleteRoom, updateRoom } from 'utils/room';
-import { setCurrentRecord, resetCurrentRecord } from 'actions/record';
+import { setCurrentRecord, resetCurrentRecord } from 'models/record/actions';
 
 import graphqlActionHelper, { ACTION_STATE } from 'utils/graphqlActionHelper';
 

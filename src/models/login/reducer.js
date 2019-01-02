@@ -1,4 +1,4 @@
-import { authLogin } from '../utils/authLogin';
+import { authLogin } from 'utils/authLogin';
 
 const login = (state = { isLogin: false }, action) => {
   switch (action.type) {

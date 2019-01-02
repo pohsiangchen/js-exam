@@ -10,9 +10,9 @@ import {
   subscribeOnUpdateRecordByRecordId,
 } from 'utils/record';
 
-import { getRoomInfo } from 'actions/room';
-import { fetchQuestionList, fetchQuestion } from 'actions/question';
-import { createRecordData, setCurrentRecord } from 'actions/record';
+import { getRoomInfo } from 'models/room/actions';
+import { fetchQuestionList, fetchQuestion } from 'models/question/actions';
+import { createRecordData, setCurrentRecord } from 'models/record/actions';
 
 import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';

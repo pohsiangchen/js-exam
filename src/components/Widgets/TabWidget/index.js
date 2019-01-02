@@ -4,7 +4,7 @@ import { withRouter, Link } from 'react-router-dom';
 
 import { Menu, Icon, message } from 'antd';
 
-import { deleteRoomAction } from 'actions/room';
+import { deleteRoomAction } from 'models/room/actions';
 
 const SubMenu = Menu.SubMenu;
 

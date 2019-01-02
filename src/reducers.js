@@ -5,17 +5,17 @@
 import { combineReducers } from 'redux';
 import formReducer from 'redux-form/es/reducer';
 
-import javascript from '_reducers/javascript';
-import react from '_reducers/react';
-import login from '_reducers/login';
-import category from '_reducers/category';
-import tape from '_reducers/tape';
-import _console from '_reducers/console';
-import tab from '_reducers/tab';
-import room from '_reducers/room';
-import record from '_reducers/record';
-import code from '_reducers/code';
-import question from '_reducers/question';
+import javascript from 'models/javascript/reducer';
+import react from 'models/react/reducer';
+import login from 'models/login/reducer';
+import category from 'models/category/reducer';
+import tape from 'models/tape/reducer';
+import _console from 'models/console/reducer';
+import tab from 'models/tab/reducer';
+import room from 'models/room/reducer';
+import record from 'models/record/reducer';
+import code from 'models/code/reducer';
+import question from 'models/question/reducer';
 
 /**
  * Merges the dynamically injected reducers
